@@ -35,12 +35,10 @@ class InputItem extends React.Component {
     console.log(listArr);
 
     // clear fields
-    // this.state.name = "";
-    // this.state.text = "";
-    this.setState = {
+    this.setState({
       name: '',
       text: ''
-    };
+    })
 
     event.preventDefault();
   }
