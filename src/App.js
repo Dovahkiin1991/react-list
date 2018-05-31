@@ -806,7 +806,7 @@ const listArr = [
   {name: "Jane", id: 510, icon: "whatshot", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit"}
  ];
 
-class InputItem extends React.Component {
+class FormData extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -829,31 +829,31 @@ class InputItem extends React.Component {
     this.setState({icon: event.target.value});
   }
   handleSubmit(event) {
-    console.log('A name was submitted: ' + this.state.value);
     //get last id value, and increment it
     const id = listArr[listArr.length-1].id + 1;
-    listArr.push({"name":this.state.name,"id":id,"icon":this.state.icon,"text":this.state.text});
+    if (this.state.name !== "" && this.state.text !== "") {
+      listArr.push({"name":this.state.name,"id":id,"icon":this.state.icon,"text":this.state.text});
+      // clear fields
+      this.setState({
+        name: '',
+        text: ''
+      })
+    }
     console.log(listArr);
-
-    // clear fields
-    this.setState({
-      name: '',
-      text: ''
-    })
 
     event.preventDefault();
   }
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <Input type="text" label="Enter new title" value={this.state.name} onChange={this.handleInputChange} />
-        <Input type='textarea' label="Enter new description" value={this.state.text} onChange={this.handleTextareaChange} />
+        <Input type="text" className="validate" label="Enter new title" value={this.state.name} onChange={this.handleInputChange} />
+        <Input type='textarea' className="validate" label="Enter new description" value={this.state.text} onChange={this.handleTextareaChange} />
 
         <label>Icon select</label>
         <select className="browser-default" value={this.state.icon} onChange={this.handleSelectChange}>
           {
             Object.keys(google_icons).map(function(key) {
-              return <option value={key}>
+              return <option value={key} key={key}>
                   {google_icons[key]}
                 </option>;
             })
@@ -872,7 +872,7 @@ class renderList extends Component {
   render() {
     return (
       <div className="container">
-        <InputItem />
+        <FormData />
         <Collapsible>
         {
           listArr.map(function(user, i){
