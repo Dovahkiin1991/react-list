@@ -800,18 +800,14 @@ const google_icons = {
   'zoom_in' : 'zoom_in',
   'zoom_out' : 'zoom_out',
 };
-const listArr = [
-  {name: "John", id: 120, icon: "filter_drama", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut la"},
-  {name: "Beth", id: 443, icon: "place", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "},
-  {name: "Jane", id: 510, icon: "whatshot", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit"}
- ];
 
 class FormData extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       name: '',
-      text: ''
+      text: '',
+      array: props.items
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -830,20 +826,24 @@ class FormData extends React.Component {
   }
   handleSubmit(event) {
     //get last id value, and increment it
-    const id = listArr[listArr.length-1].id + 1;
+    const id = this.state.array[this.state.array.length-1].id + 1;
     if (this.state.name !== "" && this.state.text !== "") {
-      listArr.push({"name":this.state.name,"id":id,"icon":this.state.icon,"text":this.state.text});
+      
+      this.setState({
+        array: this.state.array.push({"name":this.state.name,"id":id,"icon":this.state.icon,"text":this.state.text})
+      })
       // clear fields
       this.setState({
         name: '',
         text: ''
       })
     }
-    console.log(listArr);
+    console.log(this.state.array);
 
     event.preventDefault();
   }
   render() {
+    
     return (
       <form onSubmit={this.handleSubmit}>
         <Input type="text" className="validate" label="Enter new title" value={this.state.name} onChange={this.handleInputChange} />
@@ -869,13 +869,30 @@ class FormData extends React.Component {
 }
 
 class renderList extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      listItems:  [
+        {name: "John", id: 120, icon: "filter_drama", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut la"},
+        {name: "Beth", id: 443, icon: "place", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "},
+        {name: "Jane", id: 510, icon: "whatshot", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit"}
+       ]
+    }
+    this.handleItemChange = this.handleItemChange.bind(this);
+  }
+  handleItemChange(event) {
+    console.log(this.state.listItems)
+    this.setState({
+      // listItems: this
+    });
+  }
   render() {
     return (
       <div className="container">
-        <FormData />
+        <FormData items={this.state.listItems} onChange={this.handleItemChange} />
         <Collapsible>
         {
-          listArr.map(function(user, i){
+          this.state.listItems.map(function(user, i){
             var status = (i === 0) ? 'active' : ''; 
             return <CollapsibleItem key={i} className={status} header={user.name} icon={user.icon}>
               {user.text}
